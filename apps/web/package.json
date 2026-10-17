@@ -5,5 +5,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start"
+  },
+  "dependencies": {
+    "@microsoft/microsoft-graph-client": "^3.0.7"
   }
 }
