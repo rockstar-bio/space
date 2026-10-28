@@ -5,8 +5,8 @@ import "./globals.css";
 import { cn } from "rockin/cn";
 
 export const metadata = {
-  title: "Web",
-  description: "A minimal Next.js app in a Bun monorepo",
+  title: "Space — Free repair resources",
+  description: "A nonprofit, open-source home for legally redistributable mobile repair resources.",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

@@ -42,3 +42,5 @@ coverage/
 .vercel/
 *.tsbuildinfo
 
+scripts/download-ms-file-type-icons.mjs
+apps/web/public/icons/file/manifest.json

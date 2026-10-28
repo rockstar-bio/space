@@ -6,7 +6,6 @@ import { Badge, Button, Card, CardContent, CardDescription, CardHeader, CardTitl
 import { cn } from 'rockin/cn'
 import { runPlaygroundAction, type PlaygroundActionName } from '@/actions/playground'
 
-const initialInput = JSON.stringify({ slug: '', top: 50 }, null, 2)
 type Response = Awaited<ReturnType<typeof runPlaygroundAction>>
 type Run = { id: number; action: PlaygroundActionName; input: string; result: Response; serverMs: number; roundTripMs: number; time: string }
 
@@ -20,9 +19,11 @@ function JsonViewer({ value }: { value: string }) {
   )
 }
 
-export default function Playground() {
-  const [action, setAction] = useState<PlaygroundActionName>('getChildren')
-  const [input, setInput] = useState(initialInput)
+export default function Playground({ actions }: { actions: string[] }) {
+  const actionNames = actions as PlaygroundActionName[]
+  const firstAction = actionNames[0]
+  const [action, setAction] = useState<PlaygroundActionName>(firstAction)
+  const [input, setInput] = useState('[]')
   const [result, setResult] = useState<Response | null>(null)
   const [roundTripMs, setRoundTripMs] = useState<number | null>(null)
   const [running, setRunning] = useState(false)
@@ -65,7 +66,7 @@ export default function Playground() {
   }
 
   function reset() {
-    setInput(initialInput)
+    setInput('[]')
     setResult(null)
     setRoundTripMs(null)
     setRunA(null)
@@ -98,16 +99,16 @@ export default function Playground() {
             <CardContent className="space-y-6">
               <Field>
                 <FieldLabel>Action</FieldLabel>
-                <Select value={action} onValueChange={(value) => setAction(value as PlaygroundActionName)}>
+                <Select value={action} onValueChange={(value) => { setAction(value as PlaygroundActionName); setInput('[]') }}>
                   <SelectTrigger><SelectValue placeholder="Choose an action" /></SelectTrigger>
-                  <SelectContent><SelectItem value="getChildren">getChildren</SelectItem></SelectContent>
+                  <SelectContent>{actionNames.map((name) => <SelectItem key={name} value={name}>{name}</SelectItem>)}</SelectContent>
                 </Select>
-                <FieldDescription>actions / drive / children</FieldDescription>
+                <FieldDescription>Imported from the storage provider boundary.</FieldDescription>
               </Field>
               <Field>
                 <FieldLabel>Input JSON</FieldLabel>
                 <Textarea value={input} onChange={(event) => setInput(event.target.value)} spellCheck={false} aria-label="Action input JSON" className="min-h-60 font-mono text-xs leading-6" />
-                <FieldDescription>Use slug, pageParam, and top. Top is clamped to 1–200.</FieldDescription>
+                <FieldDescription>Use a JSON array for positional arguments, for example: [query object].</FieldDescription>
               </Field>
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <Button variant="ghost" size="sm" onClick={reset} disabled={running}><RotateCcw className="size-4" /> Reset</Button>
